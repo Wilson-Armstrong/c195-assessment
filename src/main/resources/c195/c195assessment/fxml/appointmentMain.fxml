@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane hgap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" vgap="10.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="c195.c195assessment.controller.ApptMainController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
+    <RowConstraints maxHeight="122.0" minHeight="0.0" prefHeight="31.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="322.0" minHeight="10.0" prefHeight="285.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="151.0" minHeight="0.0" prefHeight="34.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label fx:id="apptFormLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Appointment Information" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </Label>
+      <HBox alignment="BOTTOM_RIGHT" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <children>
+            <Label fx:id="filterViewLabel" text="View Appointments in:" />
+            <RadioButton fx:id="viewAllRadio" mnemonicParsing="false" onAction="#viewAllRadioHandler" selected="true" text="Entirity">
+               <toggleGroup>
+                  <ToggleGroup fx:id="appointmentView" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="viewMonthlyRadio" mnemonicParsing="false" onAction="#viewMonthlyRadioHandler" text="This Month" toggleGroup="$appointmentView" />
+            <RadioButton fx:id="viewWeeklyRadio" mnemonicParsing="false" onAction="#viewWeeklyRadioHandler" text="This Week" toggleGroup="$appointmentView" />
+         </children>
+      </HBox>
+      <TableView fx:id="apptTableView" GridPane.columnSpan="3" GridPane.rowIndex="2">
+        <columns>
+            <TableColumn fx:id="apptIDColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Appointment_ID" />
+            <TableColumn fx:id="titleColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Title" />
+            <TableColumn fx:id="descriptionColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Description" />
+            <TableColumn fx:id="locationColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Location" />
+            <TableColumn fx:id="contactColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Contact" />
+            <TableColumn fx:id="typeColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Type" />
+            <TableColumn fx:id="startColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Start" />
+            <TableColumn fx:id="endColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="End" />
+            <TableColumn fx:id="customerIDColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Customer_ID" />
+            <TableColumn fx:id="userColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="User_ID" />
+        </columns>
+      </TableView>
+      <HBox spacing="10.0" GridPane.rowIndex="3">
+         <children>
+            <Button fx:id="viewAlertButton" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#viewAlertButtonHandler" text="View Active Alert" />
+            <Button fx:id="openCustomerButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openCustomerButtonHandler" text="Open Customer Information" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <children>
+            <Button fx:id="addApptButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addApptButtonHandler" text="Add Appointment" />
+            <Button fx:id="modApptButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#modApptButtonHandler" text="Update Appointment" />
+            <Button fx:id="delApptButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#delApptButtonHandler" text="Delete Appointment" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </HBox>
+      <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3">
+         <children>
+            <Button fx:id="logoutButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#logoutButtonHandler" text="Logout" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</GridPane>

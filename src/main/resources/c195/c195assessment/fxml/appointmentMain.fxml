@@ -48,16 +48,16 @@
       </HBox>
       <TableView fx:id="apptTableView" GridPane.columnSpan="3" GridPane.rowIndex="2">
         <columns>
-            <TableColumn fx:id="apptIDColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Appointment_ID" />
-            <TableColumn fx:id="titleColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Title" />
-            <TableColumn fx:id="descriptionColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Description" />
-            <TableColumn fx:id="locationColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Location" />
-            <TableColumn fx:id="contactColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Contact" />
-            <TableColumn fx:id="typeColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Type" />
-            <TableColumn fx:id="startColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Start" />
-            <TableColumn fx:id="endColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="End" />
-            <TableColumn fx:id="customerIDColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Customer_ID" />
-            <TableColumn fx:id="userColumn" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="User_ID" />
+            <TableColumn fx:id="apptIDColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Appointment_ID" />
+            <TableColumn fx:id="titleColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="50.0" text="Title" />
+            <TableColumn fx:id="descriptionColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Description" />
+            <TableColumn fx:id="locationColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Location" />
+            <TableColumn fx:id="contactColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Contact" />
+            <TableColumn fx:id="typeColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Type" />
+            <TableColumn fx:id="startColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="50.0" text="Start" />
+            <TableColumn fx:id="endColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="50.0" text="End" />
+            <TableColumn fx:id="customerIDColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Customer_ID" />
+            <TableColumn fx:id="userColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="50.0" text="User_ID" />
         </columns>
       </TableView>
       <HBox spacing="10.0" GridPane.rowIndex="3">

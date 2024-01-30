@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 public class Customer {
-    private int customerId; // INT(10), Primary Key
+    private int customerID; // INT(10), Primary Key
     private String customerName; // VARCHAR(50)
     private String address; // VARCHAR(100)
     private String postalCode; // VARCHAR(50)
@@ -15,12 +15,26 @@ public class Customer {
     private String lastUpdatedBy; // VARCHAR(50)
     private int divisionId; // INT(10), Foreign Key (FirstLevelDivision)
 
-    public int getCustomerId() {
-        return customerId;
+    /** This constructor is used to specify all attributes of the Customer. */
+    public Customer(int customerId, String customerName, String address, String postalCode, String phone, LocalDateTime createDate, String createdBy, Instant lastUpdate, String lastUpdatedBy, int divisionId) {
+        this.customerID = customerId;
+        this.customerName = customerName;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.phone = phone;
+        this.createDate = createDate;
+        this.createdBy = createdBy;
+        this.lastUpdate = lastUpdate;
+        this.lastUpdatedBy = lastUpdatedBy;
+        this.divisionId = divisionId;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public int getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
     }
 
     public String getCustomerName() {
@@ -93,5 +107,10 @@ public class Customer {
 
     public void setDivisionId(int divisionId) {
         this.divisionId = divisionId;
+    }
+
+    @Override
+    public String toString() {
+        return getCustomerName();
     }
 }

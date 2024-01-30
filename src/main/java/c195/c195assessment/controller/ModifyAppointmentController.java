@@ -2,17 +2,21 @@ package c195.c195assessment.controller;
 
 import c195.c195assessment.dao.AppointmentsQuery;
 import c195.c195assessment.dao.ContactsQuery;
-import c195.c195assessment.helper.Alerts;
+import c195.c195assessment.dao.CustomersQuery;
+import c195.c195assessment.helper.*;
 import c195.c195assessment.model.Appointment;
 import c195.c195assessment.model.Contact;
+import c195.c195assessment.model.Customer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
@@ -40,7 +44,7 @@ public class ModifyAppointmentController {
     public Label contactLabel;
     public ChoiceBox<Contact> contactChoiceBox;
     public Label customerIDLabel;
-    public Label customerIdValueField;
+    public ChoiceBox<Customer> customerIDChoiceBox;
     public Label userLabel;
     public Label userIDValueField;
     public Button confirmButton;
@@ -49,10 +53,11 @@ public class ModifyAppointmentController {
 
     @FXML
     public void initialize() {
-        populateTimeComboBoxes(startTimeComboBox, 0, 23);
-        populateTimeComboBoxes(endTimeComboBox, 0, 23);
+        FormHelper.populateTimeComboBoxes(startTimeComboBox, 0, 23);
+        FormHelper.populateTimeComboBoxes(endTimeComboBox, 0, 23);
     }
 
+    /** Populates the form's fields with the information from the selected appointment. */
     public void setupFormWithAppointment() {
         // Setting the values of the form to represent those of the selected appointment
         apptIDValue.setText(String.valueOf(selectedAppointment.getAppointmentID()));
@@ -62,15 +67,19 @@ public class ModifyAppointmentController {
         typeField.setText(selectedAppointment.getType());
 
         // Start Date and Time fields
-        LocalDate startDate = selectedAppointment.getStart().toLocalDate();
+        LocalDateTime convertedStartTime = TimeZoneConversion.convertTimeZone(selectedAppointment.getStart(),
+                ZoneId.of("UTC"), AppContext.getUserTimeZone().toZoneId());
+        LocalDate startDate = convertedStartTime.toLocalDate();
         startDatePicker.setValue(startDate);
-        String formattedStartTime = selectedAppointment.getStart().format(DateTimeFormatter.ofPattern("HH:mm"));
+        String formattedStartTime = convertedStartTime.format(DateTimeFormatter.ofPattern("HH:mm"));
         startTimeComboBox.getSelectionModel().select(formattedStartTime);
 
         // End Date and Time fields
-        LocalDate endDate = selectedAppointment.getEnd().toLocalDate();
+        LocalDateTime convertedEndTime = TimeZoneConversion.convertTimeZone(selectedAppointment.getEnd(),
+                ZoneId.of("UTC"), AppContext.getUserTimeZone().toZoneId());
+        LocalDate endDate = convertedEndTime.toLocalDate();
         endDatePicker.setValue(endDate);
-        String formattedEndTime = selectedAppointment.getEnd().format(DateTimeFormatter.ofPattern("HH:mm"));
+        String formattedEndTime = convertedEndTime.format(DateTimeFormatter.ofPattern("HH:mm"));
         endTimeComboBox.getSelectionModel().select(formattedEndTime);
 
         // Foreign key fields
@@ -81,15 +90,25 @@ public class ModifyAppointmentController {
                 break;
             }
         }
-        customerIdValueField.setText(String.valueOf(selectedAppointment.getCustomerID()));
+        customerIDChoiceBox.setItems(CustomersQuery.readAll());
+        for (Customer customer : customerIDChoiceBox.getItems()) {
+            if (customer.getCustomerID() == selectedAppointment.getCustomerID()) {
+                customerIDChoiceBox.getSelectionModel().select(customer);
+                break;
+            }
+        }
         userIDValueField.setText(String.valueOf(selectedAppointment.getUserID()));
     }
 
+    /** Return to the appointment table view without making changes to the selected appointment. */
     public void cancelButtonHandler(ActionEvent actionEvent) {
-        Stage stage = (Stage) cancelButton.getScene().getWindow();
-        stage.close();
+        SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/appointmentMain.fxml");
     }
 
+    /**
+     * Ensures that any changes are valid. If so, the selected appointment is updated and the scene returns to the
+     * appointment table view. If not, the user is shown an alert specifying the error.
+     */
     public void confirmButtonHandler(ActionEvent actionEvent) {
         // Create a new Appointment object
         Appointment tempAppointment = getTempAppointment();
@@ -99,15 +118,22 @@ public class ModifyAppointmentController {
         tempAppointment.setDescription(descriptionField.getText());
         tempAppointment.setLocation(locationField.getText());
         tempAppointment.setType(typeField.getText());
-        tempAppointment.setStart(getDateTimeFromForm(startDatePicker, startTimeComboBox));
-        tempAppointment.setEnd(getDateTimeFromForm(endDatePicker, endTimeComboBox));
+        LocalDateTime selectedStartTime = FormHelper.getDateTimeFromForm(startDatePicker, startTimeComboBox);
+        LocalDateTime convertedStartTime = TimeZoneConversion.convertTimeZone(selectedStartTime,
+                AppContext.getUserTimeZone().toZoneId(), ZoneId.of("UTC"));
+        tempAppointment.setStart(convertedStartTime);
+        LocalDateTime selectedEndTime = FormHelper.getDateTimeFromForm(endDatePicker, endTimeComboBox);
+        LocalDateTime convertedEndTime = TimeZoneConversion.convertTimeZone(selectedEndTime,
+                AppContext.getUserTimeZone().toZoneId(), ZoneId.of("UTC"));
+        tempAppointment.setEnd(convertedEndTime);
         tempAppointment.setContactID(contactChoiceBox.getSelectionModel().getSelectedItem().getContactId());
-        // TO DO: Update tempAppointment's CustomerID from a selection.
+        tempAppointment.setCustomerID(customerIDChoiceBox.getSelectionModel().getSelectedItem().getCustomerID());
 
         // Check values for validity
         if (tempAppointment.getStart().isAfter(tempAppointment.getEnd())) {
             Alerts.showAlert("Date-Time Error",
                     "The starting date and time must be before the ending date and time.");
+            return;
         }
 
         // Update the Appointment object
@@ -120,11 +146,8 @@ public class ModifyAppointmentController {
             return;
         }
 
-        // Close the modification form
-        Stage stage = (Stage) confirmButton.getScene().getWindow();
-        stage.close();
-
-        // Refresh the TableView
+        // Return to the appointment table view
+        SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/appointmentMain.fxml");
     }
 
     /** Creates a new Appointment object that copies attributes from the selectedAppointment and takes values from the
@@ -154,23 +177,5 @@ public class ModifyAppointmentController {
 
     public void setSelectedAppointment(Appointment selectedAppointment) {
         this.selectedAppointment = selectedAppointment;
-    }
-
-    private void populateTimeComboBoxes(ComboBox<String> comboBox, int startHour, int endHour) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-
-        for (int hour = startHour; hour <= endHour; hour++) {
-            LocalTime time = LocalTime.of(hour, 0);
-            String formattedTime = time.format(formatter);
-            comboBox.getItems().add(formattedTime);
-        }
-    }
-
-    private LocalDateTime getDateTimeFromForm(DatePicker datePicker, ComboBox<String> timeComboBox) {
-        LocalDate selectedDate = datePicker.getValue();
-        String selectedTimeStr = timeComboBox.getValue();
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime selectedTime = LocalTime.parse(selectedTimeStr, timeFormatter);
-        return LocalDateTime.of(selectedDate, selectedTime);
     }
 }

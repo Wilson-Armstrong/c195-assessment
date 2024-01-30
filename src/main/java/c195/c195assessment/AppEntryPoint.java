@@ -19,16 +19,13 @@ public class AppEntryPoint extends Application {
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("C195 Assessment");
         stage.setScene(scene);
+        stage.setOnCloseRequest(event -> {
+            if (AppContext.getUser() != null) { AppContext.setUser(null); }
+        });
         stage.show();
     }
 
     public static void main(String[] args) {
-        // Detect user's settings
-        AppContext appContext = AppContext.getInstance();
-
-        // Choose ResourceBundle based on user's Locale
-        //ResourceBundle rb1 = ResourceBundle.getBundle("c195.c195assessment.localization.messages", appContext.getUserLocale());
-
         JDBC.openConnection();
         launch();
         JDBC.closeConnection();

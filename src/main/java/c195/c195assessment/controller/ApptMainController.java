@@ -1,7 +1,7 @@
 package c195.c195assessment.controller;
 
 import c195.c195assessment.dao.AppointmentsQuery;
-import c195.c195assessment.helper.Alerts;
+import c195.c195assessment.helper.*;
 import c195.c195assessment.model.Appointment;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.stream.Collectors;
@@ -52,25 +53,26 @@ public class ApptMainController {
     public Button delApptButton;
     public Button logoutButton;
 
+
+
     @FXML
     public void initialize() {
-        // Reading appointments from database
-        allAppointments = AppointmentsQuery.readAll();
-
-        // Populating the table with existing appointments
+        // Setting cellValueFactory and formats
         apptIDColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         startColumn.setCellValueFactory(new PropertyValueFactory<>("start"));
-        setupDateTimeColumn(startColumn);  // Formatting datetime to yyyy-MM-dd HH:mm
+        FormHelper.setupDateTimeColumn(startColumn);  // Formatting datetime to yyyy-MM-dd HH:mm
         endColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
-        setupDateTimeColumn(endColumn);  // Formatting datetime to yyyy-MM-dd HH:mm
+        FormHelper.setupDateTimeColumn(endColumn);  // Formatting datetime to yyyy-MM-dd HH:mm
         contactColumn.setCellValueFactory(new PropertyValueFactory<>("contactID"));
         customerIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         userColumn.setCellValueFactory(new PropertyValueFactory<>("userID"));
-        apptTableView.setItems(allAppointments);
+
+        // Reading appointments from database
+        refreshAppointmentTableView();
 
         // Alert if there is an upcoming appointment
         checkForUpcomingAppointments();
@@ -80,9 +82,7 @@ public class ApptMainController {
             Stage stage = (Stage) apptTableView.getScene().getWindow();
             stage.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    ObservableList<Appointment> appointments = AppointmentsQuery.readAll();
-                    apptTableView.setItems(appointments);
-                    apptTableView.refresh();
+                    refreshAppointmentTableView();
                 }
             });
         });
@@ -140,119 +140,63 @@ public class ApptMainController {
         filterAppointmentsByWeek();
     }
 
+    /** Display existing alerts */
     public void viewAlertButtonHandler(ActionEvent actionEvent) {
         showUpcomingAppointmentAlert();
     }
 
+    /** Open the scene that displays the existing customer information. */
     public void openCustomerButtonHandler(ActionEvent actionEvent) {
-        try {
-            // Load next FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/c195/c195assessment/fxml/customerMain.fxml"));
-            Parent root = loader.load();
-
-            // Get the current stage from the event source
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-
-            // Set the new scene
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            System.out.println("FXML Loading error: " + e.getMessage());
-        }
+        SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/customerMain.fxml");
     }
 
+    /** Open the form for creating a new appointment. */
     public void addApptButtonHandler(ActionEvent actionEvent) {
-        try {
-            // Load next FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/c195/c195assessment/fxml/addAppointment.fxml"));
-            Parent root = loader.load();
-
-            // Get the current stage from the event source
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-
-            // Set the new scene
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            System.out.println("FXML Loading error: " + e.getMessage());
-        }
+        SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/addAppointment.fxml");
     }
 
+    /** Open the form for modifying an existing appointment that is selected from the TableView. */
     public void modApptButtonHandler(ActionEvent actionEvent) {
+        // Ensure that an appointment from the TableView is selected
         Appointment selectedAppointment = apptTableView.getSelectionModel().getSelectedItem();
         if (selectedAppointment == null) {
             Alerts.showAlert("No Selected Appointment", "Please select an appointment from the table.");
             return;
         }
 
-        try {
-            // Load next FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/c195/c195assessment/fxml/modifyAppointment.fxml"));
-            Parent root = loader.load();
-
-            // Passing the selected appointment to the new scene's controller and populating the form's fields
-            ModifyAppointmentController modifyAppointmentController = loader.getController();
-            modifyAppointmentController.setSelectedAppointment(selectedAppointment);
-            modifyAppointmentController.setupFormWithAppointment();
-
-            // Create the new stage and show it
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(root));
-            loginStage.show();
-        } catch (IOException e) {
-            System.out.println("FXML Loading error: " + e.getMessage());
-            e.printStackTrace();
-        }
-
+        // Switch to modifyAppointment.fxml while passing the selected appointment to its controller
+        SceneSwitcher.switchSceneWithInfo(actionEvent, "/c195/c195assessment/fxml/modifyAppointment.fxml",
+                (ModifyAppointmentController controller) -> {
+                    controller.setSelectedAppointment(selectedAppointment);
+                    controller.setupFormWithAppointment();
+                });
     }
 
+    /** Delete the selected appointment from the database. */
     public void delApptButtonHandler(ActionEvent actionEvent) {
         Appointment selectedAppointment = apptTableView.getSelectionModel().getSelectedItem();
         if (selectedAppointment != null) {
             int deleteIndex = selectedAppointment.getAppointmentID();
             boolean deleteWorked = AppointmentsQuery.deleteByID(deleteIndex);
             if (!deleteWorked) { System.out.println("Failed to delete appointment " + deleteIndex); }
-            allAppointments.remove(selectedAppointment);
-            apptTableView.refresh();
-        } else {
+            refreshAppointmentTableView();
+        }
+        else {
             Alerts.showAlert("No Selected Appointment", "Please select an appointment from the table.");
         }
     }
 
+    /** Return to the login screen and log the current user out. */
     public void logoutButtonHandler(ActionEvent actionEvent) {
-        // Close current window
-        Stage stage = (Stage) logoutButton.getScene().getWindow();
-        stage.close();
-
-        // Open login.fxml
-        try {
-            // Load next FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/c195/c195assessment/fxml/login.fxml"));
-            Parent root = loader.load();
-
-            // Create the new stage and show it
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(root));
-            loginStage.show();
-        } catch (IOException e) {
-            System.out.println("FXML Loading error: " + e.getMessage());
-        }
+        if (!logoutButton.isDisabled()) { logoutButton.setDisable(false); }  // Disable the alert button between logins
+        SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/login.fxml");
+        AppContext.setUser(null);  // Removing the logged-in user from AppContext
     }
 
-    /** Adds a format to a TableView's column that displays a LocalDateTime value. */
-    private void setupDateTimeColumn(TableColumn<Appointment, LocalDateTime> column) {
-        column.setCellFactory(col -> new TableCell<>() {
-            private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-            @Override
-            protected void updateItem(LocalDateTime item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(formatter.format(item));
-                }
-            }
-        });
+    /** Query the database for an updated list of all appointments and display the updated list in the TableView. */
+    private void refreshAppointmentTableView() {
+        allAppointments = AppointmentsQuery.readAll();
+        apptTableView.setItems(allAppointments);
+        apptTableView.refresh();
     }
 }

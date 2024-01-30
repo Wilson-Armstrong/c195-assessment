@@ -3,6 +3,7 @@ package c195.c195assessment.controller;
 import c195.c195assessment.dao.UsersQuery;
 import c195.c195assessment.helper.AppContext;
 import c195.c195assessment.helper.Alerts;
+import c195.c195assessment.helper.SceneSwitcher;
 import c195.c195assessment.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,7 +32,7 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-        ResourceBundle rb1 = ResourceBundle.getBundle("c195.c195assessment.localization.messages", AppContext.getInstance().getUserLocale());
+        ResourceBundle rb1 = ResourceBundle.getBundle("c195.c195assessment.localization.messages", AppContext.getUserLocale());
         formLabel.setText(rb1.getString("login.form.label"));
         usernameLabel.setText(rb1.getString("login.username.label"));
         passwordLabel.setText(rb1.getString("login.password.label"));
@@ -40,7 +41,11 @@ public class LoginController {
         loginButton.setText(rb1.getString("login.button"));
     }
 
-    public void loginButtonHandler(ActionEvent event){
+    /**
+     * Check if the entered username and password are found in the database. If not, an alert is displayed to the user.
+     * If so, the scene switches to appointmentMain.
+     * */
+    public void loginButtonHandler(ActionEvent actionEvent){
         String username = usernameField.getText();
         String password = passwordField.getText();
 
@@ -59,23 +64,8 @@ public class LoginController {
             User loggedUser = UsersQuery.readByUsername(username);
             AppContext.setUser(loggedUser);
 
-            try {
-                // Load next FXML file
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/c195/c195assessment/fxml/appointmentMain.fxml"));
-                Parent root = loader.load();
-
-                // Get the current stage from the event source
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-                // Set the new scene
-                stage.setScene(new Scene(root));
-                stage.show();
-            } catch (IOException e) {
-                System.out.println("FXML Loading error: " + e.getMessage());
-                e.printStackTrace();
-            }
-
-
+            // Open main appointment window
+            SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/appointmentMain.fxml");
         }
         else {
             // Login failed

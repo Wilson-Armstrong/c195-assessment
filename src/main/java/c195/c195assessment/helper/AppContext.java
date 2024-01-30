@@ -27,20 +27,22 @@ public class AppContext {
         return instance;
     }
 
-    public Locale getUserLocale() {
-        return userLocale;
+    public static Locale getUserLocale() {
+        return getInstance().userLocale;
     }
 
-    public TimeZone getUserTimeZone() {
-        return userTimeZone;
+    public static TimeZone getUserTimeZone() {
+        return getInstance().userTimeZone;
     }
 
-    /** This function is called when the user successfully logs in. It allows the program to quickly reference the
-     * user's information. */
+    /**
+     * This function is called when the user successfully logs in. It allows the program to quickly reference the
+     * user's information.
+     * */
     public static void setUser(User user) {
-        instance.user = user;
-        System.out.println("Logged user: " + instance.user.getUserName());
+        getInstance().user = user;
+        if (user != null) { System.out.println("Logged user: " + user.getUserName()); }
     }
 
-    public User getUser() { return instance.user; }
+    public static User getUser() { return getInstance().user; }
 }

@@ -15,7 +15,6 @@ public class AppEntryPoint extends Application {
     public void start(Stage stage) throws IOException {
         // Begin program with the login screen
         FXMLLoader fxmlLoader = new FXMLLoader(AppEntryPoint.class.getResource("/c195/c195assessment/fxml/login.fxml"));
-        // FXMLLoader fxmlLoader = new FXMLLoader(AppEntryPoint.class.getResource("/c195/c195assessment/fxml/appointmentMain.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("C195 Assessment");
         stage.setScene(scene);

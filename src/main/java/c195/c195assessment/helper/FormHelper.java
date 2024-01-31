@@ -6,10 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -77,5 +74,56 @@ public abstract class FormHelper {
             System.out.println("FXML Loading error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Displays an alert instructing a user to remedy an empty input.
+     */
+    private static void emptyInputAlert(String inputName) {
+        Alerts.showAlert("Empty input field", "Please provide a " + inputName + '.');
+    }
+
+    /**
+     * Ensure that a TextField has a value specified by the user.
+     */
+    public static boolean isInputEmpty(TextField textField, String inputName) {
+        if (textField.getText().isEmpty()) {
+            emptyInputAlert(inputName);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Ensure that a DatePicker has a specified date.
+     */
+    public static boolean isInputEmpty(DatePicker datePicker, String inputName) {
+        if (datePicker.getValue() == null) {
+            emptyInputAlert(inputName);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Ensure that a ComboBox has a selected option.
+     */
+    public static <T> boolean isInputEmpty(ComboBox<T> comboBox, String inputName) {
+        if (comboBox.getValue() == null) {
+            emptyInputAlert(inputName);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Ensure that a ComboBox has a selected option.
+     */
+    public static <T> boolean isInputEmpty(ChoiceBox<T> choiceBox, String inputName) {
+        if (choiceBox.getValue() == null) {
+            emptyInputAlert(inputName);
+            return true;
+        }
+        return false;
     }
 }

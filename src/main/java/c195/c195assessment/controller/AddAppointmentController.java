@@ -51,23 +51,31 @@ public class AddAppointmentController {
         customerChoiceBox.setItems(CustomersQuery.readAll());
     }
 
+    /**
+     * Changes the scene back to appointmentMain.fxml.
+     */
     public void cancelButtonHandler(ActionEvent actionEvent) {
-        // DELETE ME
-        System.out.println("Title: " + titleField.getText());
-        System.out.println("Description: " + descriptionField.getText());
-        System.out.println("Location: " + locationField.getText());
-        System.out.println("Type: " + typeField.getText());
-        System.out.println("Start Date: " + startDatePicker.getValue());
-        System.out.println("Start Time: " + startTimeComboBox.getValue());
-        System.out.println("End Date: " + endDatePicker.getValue());
-        System.out.println("End Time: " + endTimeComboBox.getValue());
-        System.out.println("Contact ID: " + contactChoiceBox.getSelectionModel().getSelectedItem().getContactId());
-        System.out.println("Contact ID: " + customerChoiceBox.getSelectionModel().getSelectedItem().getCustomerID());
-
         SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/appointmentMain.fxml");
     }
 
+    /**
+     * Ensures that the user has specified valid values for each field of the form, displaying an alert for an invalid
+     * inputs. If all inputs are valid, AppointmentsQuery inserts a new entry using the inputs and the scene switches
+     * back to appointmentMain.fxml.
+     */
     public void confirmButtonHandler(ActionEvent actionEvent) {
+        // Ensure each element has an input
+        if (FormHelper.isInputEmpty(titleField, "title")) { return; }
+        if (FormHelper.isInputEmpty(descriptionField, "description")) { return; }
+        if (FormHelper.isInputEmpty(locationField, "location")) { return; }
+        if (FormHelper.isInputEmpty(typeField, "type")) { return; }
+        if (FormHelper.isInputEmpty(startDatePicker, "start date")) { return; }
+        if (FormHelper.isInputEmpty(startTimeComboBox, "start time")) { return; }
+        if (FormHelper.isInputEmpty(endDatePicker, "end date")) { return; }
+        if (FormHelper.isInputEmpty(endTimeComboBox, "end time")) { return; }
+        if (FormHelper.isInputEmpty(contactChoiceBox, "contact")) { return; }
+        if (FormHelper.isInputEmpty(customerChoiceBox, "customer")) { return; }
+
         // Get data from the Form's fields
         String title = titleField.getText();
         String description = descriptionField.getText();
@@ -75,17 +83,16 @@ public class AddAppointmentController {
         String type = typeField.getText();
         LocalDateTime start = FormHelper.getDateTimeFromForm(startDatePicker, startTimeComboBox);
         LocalDateTime end = FormHelper.getDateTimeFromForm(endDatePicker, endTimeComboBox);
-        Contact contact = contactChoiceBox.getSelectionModel().getSelectedItem();
-        Customer customer = customerChoiceBox.getSelectionModel().getSelectedItem();
-        int contactID = contactChoiceBox.getSelectionModel().getSelectedItem().getContactId();
-        int customerID = customerChoiceBox.getSelectionModel().getSelectedItem().getCustomerID();
+        Contact contact = contactChoiceBox.getValue();
+        Customer customer = customerChoiceBox.getValue();
+        int contactID = contactChoiceBox.getValue().getContactId();
+        int customerID = customerChoiceBox.getValue().getCustomerID();
 
-        // Validate data
-        if (isInputEmpty(title, "title")) { return; }
-        if (isInputEmpty(description, "description")) { return; }
-        if (isInputEmpty(location, "location")) { return; }
-        if (isInputEmpty(type, "type")) { return; }
-
+        // Ensure start is before end
+        if (start.isAfter(end)) {
+            Alerts.showAlert("Time Input error", "Please ensure that the start date and time is before the end date and time.");
+            return;
+        }
 
         // Insert entry into database
         User currentUser = AppContext.getUser();
@@ -94,25 +101,5 @@ public class AddAppointmentController {
 
         // Close addAppointment.fxml and open appointmentMain.fxml
         SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/appointmentMain.fxml");
-    }
-
-    private void emptyInputAlert(String inputName) {
-        Alerts.showAlert("Empty input field", "Please provide a " + inputName + '.');
-    }
-
-    private boolean isInputEmpty(String string, String inputName) {
-        if (string.isEmpty()) {
-            emptyInputAlert(inputName);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isInputEmpty (LocalDate localDate, String inputName) {
-        if (localDate == null) {
-            emptyInputAlert(inputName);
-            return true;
-        }
-        return false;
     }
 }

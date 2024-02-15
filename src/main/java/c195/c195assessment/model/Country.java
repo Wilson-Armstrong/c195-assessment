@@ -172,4 +172,38 @@ public class Country {
     public void setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
     }
+
+    /**
+     * Constructor for an empty Country object.
+     * <p>
+     *     This constructor creates a Country object with all attributes set to default values.
+     * </p>
+     */
+    public Country() {
+        this.setCountryId(0);
+        this.setCountry("");
+        this.setCreateDate(null);
+        this.setCreatedBy("");
+        this.setLastUpdate(null);
+        this.setLastUpdatedBy("");
+    }
+
+    /**
+     * Constructor for a Country object with specified attribute values.
+     * <p>
+     *     This constructor creates a Country object with each attribute being set to a specified value.
+     * </p>
+     * */
+    public Country(int countryID, String country, LocalDateTime createDate, String createdBy, Instant lastUpdate,
+                   String lastUpdatedBy) {
+        this.setCountryId(countryID);
+        this.setCountry(country);
+        this.setCreateDate(createDate);
+        this.setCreatedBy(createdBy);
+        this.setLastUpdate(lastUpdate);
+        this.setLastUpdatedBy(lastUpdatedBy);
+    }
+
+    public String toString() { return this.getCountry(); }
+
 }

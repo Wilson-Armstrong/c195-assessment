@@ -1,13 +1,18 @@
 package c195.c195assessment.controller;
 
 import c195.c195assessment.dao.CustomersQuery;
+import c195.c195assessment.helper.Alerts;
+import c195.c195assessment.helper.SceneSwitcher;
 import c195.c195assessment.model.Customer;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -22,10 +27,6 @@ public class CustomerController {
     public TableColumn<Customer, String> addressColumn;
     public TableColumn<Customer, String> postalCodeColumn;
     public TableColumn<Customer, String> phoneColumn;
-    public TableColumn<Customer, LocalDateTime> createDateColumn;
-    public TableColumn<Customer, String> createdByColumn;
-    public TableColumn<Customer, Instant> lastUpdateColumn;
-    public TableColumn<Customer, String> lastUpdatedByColumn;
     public TableColumn<Customer, Integer> divisionIDColumn;
     public Button addCustomerButton;
     public Button modifyCustomerButton;
@@ -43,24 +44,46 @@ public class CustomerController {
 
     @FXML
     public void initialize() {
+        // Setting up cellValueFactory and formats
         customerIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
         postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        createDateColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
-        createdByColumn.setCellValueFactory(new PropertyValueFactory<>("createdBy"));
-        lastUpdateColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdate"));
-        lastUpdatedByColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdatedBy"));
         divisionIDColumn.setCellValueFactory(new PropertyValueFactory<>("divisionId"));
+
+        // Reading customers from database
+        refreshCustomerTableView();
+
+        // Adding a listener that will refresh the table view whenever the window is focused
+        Platform.runLater(() -> {
+            Stage stage = (Stage) customerTableView.getScene().getWindow();
+            stage.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    refreshCustomerTableView();
+                }
+            });
+        });
     }
 
-    public void addCustomerButtonHandler() {
-
+    public void addCustomerButtonHandler(ActionEvent actionEvent) {
+        SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/addAppointment.fxml");
     }
 
-    public void modifyCustomerButtonHandler() {
+    public void modifyCustomerButtonHandler(ActionEvent actionEvent) {
+        // Ensure that a customer from the TableView is selected
+        Customer selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
+        if (selectedCustomer == null) {
+            Alerts.showAlert("No Selected Customer", "Please select a customer from the table.");
+            return;
+        }
 
+        // Switch to modifyCustomer.fxml while passing the selected customer to its controller
+        SceneSwitcher.switchSceneWithInfo(actionEvent, "/c195/c195assessment/fxml/modifyCustomer.fxml",
+                (ModifyCustomerController controller) -> {
+                    controller.setSelectedCustomer(selectedCustomer);
+                    controller.setupFormWithCustomer();
+                });
     }
 
     public void deleteCustomerButtonHandler() {
@@ -71,6 +94,7 @@ public class CustomerController {
 
     }
 
+    /** Query the database for an updated list of all customers and display tha list in the TableView. */
     private void refreshCustomerTableView() {
         setAllCustomers(CustomersQuery.readAll());
         customerTableView.setItems(getAllCustomers());

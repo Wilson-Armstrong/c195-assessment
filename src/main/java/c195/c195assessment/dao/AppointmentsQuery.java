@@ -123,6 +123,7 @@ public abstract class AppointmentsQuery {
                 appointment.setCreateDate(rs.getTimestamp("Create_Date").toLocalDateTime());
                 appointment.setCreatedBy(rs.getString("Created_By"));
                 appointment.setLastUpdate(rs.getTimestamp("Last_Update").toInstant());
+                appointment.setLastUpdatedBy(rs.getString("Last_Updated_By"));
             }
         }
         catch (SQLException e) {

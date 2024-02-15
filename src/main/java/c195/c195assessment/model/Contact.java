@@ -30,18 +30,16 @@ public class Contact {
     private String email; // VARCHAR(50)
 
     public Contact () {
-        this.contactId = 0;
-        this.contactName = "";
-        this.email = "";
+        this.setContactId(0);
+        this.setContactName("");
+        this.setEmail("");
     }
 
     public Contact (int contactId, String contactName, String email) {
-        this.contactId = contactId;
-        this.contactName = contactName;
-        this.email = email;
+        this.setContactId(contactId);
+        this.setContactName(contactName);
+        this.setEmail(email);
     }
 
-    public String toString() {
-        return getContactName();
-    }
+    public String toString() { return this.getContactName(); }
 }

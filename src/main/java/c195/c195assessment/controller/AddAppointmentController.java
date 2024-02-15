@@ -3,10 +3,7 @@ package c195.c195assessment.controller;
 import c195.c195assessment.dao.AppointmentsQuery;
 import c195.c195assessment.dao.ContactsQuery;
 import c195.c195assessment.dao.CustomersQuery;
-import c195.c195assessment.helper.Alerts;
-import c195.c195assessment.helper.AppContext;
-import c195.c195assessment.helper.FormHelper;
-import c195.c195assessment.helper.SceneSwitcher;
+import c195.c195assessment.helper.*;
 import c195.c195assessment.model.Contact;
 import c195.c195assessment.model.Customer;
 import c195.c195assessment.model.User;
@@ -16,6 +13,7 @@ import javafx.scene.control.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class AddAppointmentController {
 
@@ -94,9 +92,15 @@ public class AddAppointmentController {
             return;
         }
 
+        // Convert times to UTC
+        LocalDateTime utcStart = TimeZoneConversion.convertTimeZone(start, AppContext.getUserTimeZone().toZoneId(),
+                ZoneId.of("UTC"));
+        LocalDateTime utcEnd = TimeZoneConversion.convertTimeZone(end, AppContext.getUserTimeZone().toZoneId(),
+                ZoneId.of("UTC"));
+
         // Insert entry into database
         User currentUser = AppContext.getUser();
-        AppointmentsQuery.insert(title, description, location, type, start, end, currentUser.getUserName(),
+        AppointmentsQuery.insert(title, description, location, type, utcStart, utcEnd, currentUser.getUserName(),
                 currentUser.getUserName(), customerID, currentUser.getUserId(), contactID);
 
         // Close addAppointment.fxml and open appointmentMain.fxml

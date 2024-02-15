@@ -30,10 +30,6 @@
             <TableColumn fx:id="addressColumn" text="Address" />
             <TableColumn fx:id="postalCodeColumn" prefWidth="100.0" text="Postal_Code" />
             <TableColumn fx:id="phoneColumn" prefWidth="90.0" text="Phone" />
-            <TableColumn fx:id="createDateColumn" prefWidth="100.0" text="Create_Date" />
-            <TableColumn fx:id="createdByColumn" text="Created_By" />
-            <TableColumn fx:id="lastUpdateColumn" prefWidth="91.0" text="Last_Update" />
-            <TableColumn fx:id="lastUpdatedByColumn" prefWidth="104.0" text="Last_Updated_By" />
             <TableColumn fx:id="divisionIDColumn" minWidth="0.0" prefWidth="76.0" text="Division_ID" />
         </columns>
       </TableView>

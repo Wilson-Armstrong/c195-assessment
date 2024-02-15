@@ -21,7 +21,7 @@ public class FirstLevelDivision {
     private String createdBy; // VARCHAR(50)
     private Instant lastUpdate; // TIMESTAMP
     private String lastUpdatedBy; // VARCHAR(50)
-    private int countryId; // INT(10), Foreign Key (Country)
+    private int countryID; // INT(10), Foreign Key (Country)
 
     /**
      * Retrieves the first level division's ID.
@@ -103,11 +103,46 @@ public class FirstLevelDivision {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
-    public int getCountryId() {
-        return countryId;
+    public int getCountryID() {
+        return countryID;
     }
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
+    public void setCountryID(int countryID) {
+        this.countryID = countryID;
     }
+
+    /**
+     * Constructor for an empty FirstLevelDivision object.
+     *      * <p>
+     *      *     This constructor creates a FirstLevelDivision object with all attributes set to default values.
+     *      * </p>
+     * */
+    public FirstLevelDivision() {
+        this.setDivisionID(0);
+        this.setDivision("");
+        this.setCreateDate(null);
+        this.setCreatedBy("");
+        this.setLastUpdate(null);
+        this.setLastUpdatedBy("");
+        this.setCountryID(0);
+    }
+
+    /**
+     * Constructor for a FirstLevelDivision object with specified attribute values.
+     *      * <p>
+     *      *     This constructor creates a FirstLevelDivision object with each attribute being set to a specified value.
+     *      * </p>
+     * */
+    public FirstLevelDivision(int divisionID, String division, LocalDateTime createDate, String createdBy,
+                              Instant lastUpdate, String lastUpdatedBy, int countryId) {
+        this.setDivisionID(divisionID);
+        this.setDivision(division);
+        this.setCreateDate(createDate);
+        this.setCreatedBy(createdBy);
+        this.setLastUpdate(lastUpdate);
+        this.setLastUpdatedBy(lastUpdatedBy);
+        this.setCountryID(countryId);
+    }
+
+    public String toString() { return this.getDivision(); }
 }

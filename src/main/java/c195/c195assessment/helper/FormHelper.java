@@ -1,7 +1,5 @@
 package c195.c195assessment.helper;
 
-import c195.c195assessment.controller.ModifyAppointmentController;
-import c195.c195assessment.model.Appointment;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

@@ -1,5 +1,6 @@
 package c195.c195assessment.dao;
 
+import c195.c195assessment.helper.AppContext;
 import c195.c195assessment.model.Contact;
 import c195.c195assessment.model.Customer;
 import javafx.collections.FXCollections;
@@ -40,5 +41,30 @@ public abstract class CustomersQuery {
             System.out.println("Error retrieving customers: " + e.getMessage());
         }
         return customers;
+    }
+
+    /** Updates the information of the supplied Customer in the table. */
+    public static boolean update(Customer customer) {
+        String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Last_Update = NOW(), Last_Updated_By = ?, Division_ID = ? WHERE Customer_ID = ?";
+        try {
+            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+
+            // Set attributes from Customer object
+            ps.setString(1, customer.getCustomerName());
+            ps.setString(2, customer.getAddress());
+            ps.setString(3, customer.getPostalCode());
+            ps.setString(4, customer.getPhone());
+            ps.setString(5, AppContext.getUser().getUserName());
+            ps.setInt(6, customer.getDivisionId());
+            ps.setInt(7, customer.getCustomerID());
+
+            // Execute update and return the number of affected rows
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+        }
+        catch (SQLException e) {
+            System.out.println("Error updating customer: " + e.getMessage());
+            return false;
+        }
     }
 }

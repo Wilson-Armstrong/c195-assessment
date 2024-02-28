@@ -67,7 +67,7 @@ public class CustomerController {
     }
 
     public void addCustomerButtonHandler(ActionEvent actionEvent) {
-        SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/addAppointment.fxml");
+        SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/addCustomer.fxml");
     }
 
     public void modifyCustomerButtonHandler(ActionEvent actionEvent) {

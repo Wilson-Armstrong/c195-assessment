@@ -49,11 +49,11 @@
             <Label text="Customer_Name" GridPane.rowIndex="1" />
             <TextField fx:id="customerNameField" promptText="Customer_Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Address" GridPane.rowIndex="2" />
-            <TextField fx:id="addressField" editable="false" layoutX="313.0" layoutY="10.0" promptText="Address" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="addressField" layoutX="313.0" layoutY="10.0" promptText="Address" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label layoutX="10.0" layoutY="114.0" text="Postal_Code" GridPane.rowIndex="3" />
-            <TextField fx:id="postalCodeField" editable="false" layoutX="313.0" layoutY="65.0" promptText="Postal_Code" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="postalCodeField" layoutX="313.0" layoutY="65.0" promptText="Postal_Code" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="Phone" GridPane.rowIndex="4" />
-            <TextField fx:id="phoneField" editable="false" layoutX="10.0" layoutY="9.0" promptText="Phone" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="phoneField" layoutX="10.0" layoutY="9.0" promptText="Phone" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Country" GridPane.rowIndex="5" />
             <Label text="First Level Division" GridPane.rowIndex="6" />
             <ChoiceBox fx:id="countryChoiceBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />

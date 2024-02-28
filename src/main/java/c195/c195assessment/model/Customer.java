@@ -15,6 +15,20 @@ public class Customer {
     private String lastUpdatedBy; // VARCHAR(50)
     private int divisionId; // INT(10), Foreign Key (FirstLevelDivision)
 
+    /** This constructor is used to create an empty Customer object. */
+    public Customer() {
+        this.setCustomerID(0);
+        this.setCustomerName("");
+        this.setAddress("");
+        this.setPostalCode("");
+        this.setPhone("");
+        this.setCreateDate(null);
+        this.setCreatedBy("");
+        this.setLastUpdate(null);
+        this.setLastUpdatedBy("");
+        this.setDivisionId(0);
+    }
+
     /** This constructor is used to specify all attributes of the Customer. */
     public Customer(int customerId, String customerName, String address, String postalCode, String phone, LocalDateTime createDate, String createdBy, Instant lastUpdate, String lastUpdatedBy, int divisionId) {
         this.customerID = customerId;

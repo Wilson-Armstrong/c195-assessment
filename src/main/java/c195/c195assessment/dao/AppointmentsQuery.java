@@ -149,12 +149,13 @@ public abstract class AppointmentsQuery {
     }
 
     public static boolean update(Appointment appointment) {
-        String sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, " +
-                "Start = ?, End = ?, Last_Update = NOW(), Last_Updated_By = ?, " +
-                "Customer_ID = ?, User_ID = ?, Contact_ID = ? " +
-                "WHERE Appointment_ID = ?";
+        String sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, "
+                + "Last_Update = NOW(), Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? "
+                + "WHERE Appointment_ID = ?";
 
-        try (PreparedStatement ps = JDBC.connection.prepareStatement(sql)) {
+        try {
+            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+
             // Set the appointment attributes from the passed object
             ps.setString(1, appointment.getTitle());
             ps.setString(2, appointment.getDescription());

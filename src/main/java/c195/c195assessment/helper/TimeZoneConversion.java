@@ -35,7 +35,7 @@ public class TimeZoneConversion {
      */
     public static LocalDateTime utcToLocal(LocalDateTime localDateTime) {
         ZoneId utcID = ZoneId.of("UTC");
-        ZoneId localID = AppContext.getUserTimeZone().toZoneId();;
+        ZoneId localID = AppContext.getUserTimeZone().toZoneId();
         return convertTimeZone(localDateTime, utcID, localID);
     }
 
@@ -49,7 +49,7 @@ public class TimeZoneConversion {
      */
     public static LocalDateTime localToUtc(LocalDateTime localDateTime) {
         ZoneId utcID = ZoneId.of("UTC");
-        ZoneId localID = AppContext.getUserTimeZone().toZoneId();;
+        ZoneId localID = AppContext.getUserTimeZone().toZoneId();
         return convertTimeZone(localDateTime, localID, utcID);
     }
 }

@@ -8,14 +8,10 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
 
 /**
  * Controller for the customer management view. Manages the display of customers in a table view, and handles navigation
@@ -32,10 +28,6 @@ public class CustomerController {
     public TableColumn<Customer, String> postalCodeColumn;
     public TableColumn<Customer, String> phoneColumn;
     public TableColumn<Customer, Integer> divisionIDColumn;
-    public Button addCustomerButton;
-    public Button modifyCustomerButton;
-    public Button deleteCustomerButton;
-    public Button returnToApptButton;
 
     /**
      * Initializes the controller. Sets up the table columns and loads all customers from the database into the table

@@ -14,7 +14,6 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -25,30 +24,17 @@ public class ModifyAppointmentController {
 
 
     // FXML elements
-    public Label apptMenuLabel;
-    public Label apptIDLabel;
-    public Label titleLabel;
     public TextField titleField;
     public TextField descriptionField;
-    public Label descriptionLabel;
-    public Label locationLabel;
     public TextField locationField;
-    public Label typeLabel;
     public TextField typeField;
-    public Label startLabel;
     public DatePicker startDatePicker;
     public ComboBox<String> startTimeComboBox;
-    public Label endLabel;
     public DatePicker endDatePicker;
     public ComboBox<String> endTimeComboBox;
-    public Label contactLabel;
     public ChoiceBox<Contact> contactChoiceBox;
-    public Label customerIDLabel;
     public ChoiceBox<Customer> customerChoiceBox;
-    public Label userLabel;
     public Label userIDValueField;
-    public Button confirmButton;
-    public Button cancelButton;
     public Label apptIDValue;
 
     /**
@@ -184,6 +170,17 @@ public class ModifyAppointmentController {
         LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
         LocalDate endDate = endDatePicker.getValue();
         LocalTime endTime = LocalTime.parse(endTimeComboBox.getValue(), DateTimeFormatter.ofPattern("HH:mm"));
+        return getAppointment(endDate, endTime, startDateTime);
+    }
+
+    /**
+     * Creates and returns a {@link Appointment} object populated with the data entered in the form fields. This method
+     * extracts the values entered by the user into the appointment form and uses them to populate a new Appointment
+     * object.
+     *
+     * @return A newly created {@link Appointment} object populated with the form data.
+     */
+    private Appointment getAppointment(LocalDate endDate, LocalTime endTime, LocalDateTime startDateTime) {
         LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
 
         Appointment tempAppointment = new Appointment(selectedAppointment);

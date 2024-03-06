@@ -1,6 +1,5 @@
 package c195.c195assessment.dao;
 
-import c195.c195assessment.model.Appointment;
 import c195.c195assessment.model.Contact;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

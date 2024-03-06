@@ -78,38 +78,4 @@ public abstract class FirstLevelDivisionsQuery {
         return firstLevelDivision;
     }
 
-    /**
-     * Retrieves all first-level division records that belong to a specified country, identified by the Country_ID, from
-     * the database.
-     *
-     * @param countryID The unique ID of the country whose divisions are to be retrieved.
-     * @return An {@link ObservableList} of {@link FirstLevelDivision} objects representing the records that belong to
-     * the specified country.
-     */
-    public static ObservableList<FirstLevelDivision> readByCountryID(int countryID) {
-        ObservableList<FirstLevelDivision> firstLevelDivisions = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = ?";
-        try {
-            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-            ps.setInt(1, countryID);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                FirstLevelDivision firstLevelDivision = new FirstLevelDivision(
-                        rs.getInt("Division_ID"),
-                        rs.getString("Division"),
-                        rs.getTimestamp("Create_Date").toLocalDateTime(),
-                        rs.getString("Created_By"),
-                        rs.getTimestamp("Last_Update").toInstant(),
-                        rs.getString("Last_Updated_By"),
-                        rs.getInt("Country_ID")
-                );
-                firstLevelDivisions.add(firstLevelDivision);
-            }
-        }
-        catch (SQLException e) {
-            System.out.println("Error retrieving filtered first level divisions: " + e.getMessage());
-        }
-        return firstLevelDivisions;
-    }
 }

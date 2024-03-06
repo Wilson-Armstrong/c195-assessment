@@ -21,7 +21,7 @@
     <RowConstraints vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="customerMenuLabel" text="Add Customer">
+      <Label text="Add Customer">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>

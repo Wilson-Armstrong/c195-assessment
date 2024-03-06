@@ -23,7 +23,7 @@
     <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="apptMenuLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Update Appointment">
+      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Update Appointment">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
@@ -49,40 +49,40 @@
             <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label fx:id="apptIDLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Appointment_ID" />
+            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Appointment_ID" />
             <Label fx:id="apptIDValue" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <Label fx:id="titleLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Title" GridPane.rowIndex="1" />
+            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Title" GridPane.rowIndex="1" />
             <TextField fx:id="titleField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Title" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></TextField>
-            <Label fx:id="descriptionLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Description" GridPane.rowIndex="2" />
+            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Description" GridPane.rowIndex="2" />
             <TextField fx:id="descriptionField" layoutX="313.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Description" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></TextField>
-            <Label fx:id="locationLabel" layoutX="10.0" layoutY="114.0" text="Location" GridPane.rowIndex="3" />
+            <Label layoutX="10.0" layoutY="114.0" text="Location" GridPane.rowIndex="3" />
             <TextField fx:id="locationField" layoutX="313.0" layoutY="65.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Location" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></TextField>
-            <Label fx:id="typeLabel" layoutX="10.0" layoutY="114.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Type" GridPane.rowIndex="4" />
+            <Label layoutX="10.0" layoutY="114.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Type" GridPane.rowIndex="4" />
             <TextField fx:id="typeField" layoutX="10.0" layoutY="9.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Type" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></TextField>
-            <Label fx:id="startLabel" layoutX="10.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Start" GridPane.rowIndex="5" />
+            <Label layoutX="10.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Start" GridPane.rowIndex="5" />
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
                   <DatePicker fx:id="startDatePicker" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Start Date" />
                   <ComboBox fx:id="startTimeComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" promptText="Time" />
                </children>
             </HBox>
-            <Label fx:id="endLabel" layoutX="10.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="End" GridPane.rowIndex="6" />
+            <Label layoutX="10.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="End" GridPane.rowIndex="6" />
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
                   <DatePicker fx:id="endDatePicker" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="End Date" />
@@ -93,14 +93,14 @@
                   </ComboBox>
                </children>
             </HBox>
-            <Label fx:id="contactLabel" text="Contact" GridPane.rowIndex="7" />
+            <Label text="Contact" GridPane.rowIndex="7" />
             <ChoiceBox fx:id="contactChoiceBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </ChoiceBox>
-            <Label fx:id="customerIDLabel" layoutX="10.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Customer_ID" GridPane.rowIndex="8" />
-            <Label fx:id="userLabel" layoutX="10.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="User_ID" GridPane.rowIndex="9" />
+            <Label layoutX="10.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Customer_ID" GridPane.rowIndex="8" />
+            <Label layoutX="10.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="User_ID" GridPane.rowIndex="9" />
             <Label fx:id="userIDValueField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
             <ChoiceBox fx:id="customerChoiceBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="8" />
          </children>
@@ -113,8 +113,8 @@
       </GridPane>
       <HBox alignment="CENTER_RIGHT" fillHeight="false" spacing="10.0" GridPane.rowIndex="2">
          <children>
-            <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#confirmButtonHandler" text="Confirm" />
-            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonHandler" text="Cancel" />
+            <Button mnemonicParsing="false" onAction="#confirmButtonHandler" text="Confirm" />
+            <Button mnemonicParsing="false" onAction="#cancelButtonHandler" text="Cancel" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

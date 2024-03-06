@@ -11,9 +11,7 @@ import c195.c195assessment.model.FirstLevelDivision;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.util.Comparator;
@@ -22,7 +20,6 @@ import java.util.Comparator;
  * Controller for the Modify Customer view, allowing users to update details of an existing customer.
  */
 public class ModifyCustomerController {
-    public Label customerMenuLabel;
     public TextField customerIDField;
     public TextField customerNameField;
     public TextField addressField;
@@ -30,8 +27,6 @@ public class ModifyCustomerController {
     public TextField phoneField;
     public ChoiceBox<Country> countryChoiceBox;
     public ChoiceBox<FirstLevelDivision> firstLevelDivisionChoiceBox;
-    public Button confirmButton;
-    public Button cancelButton;
     private Customer selectedCustomer;
     private ObservableList<Country> countries;
     private ObservableList<FirstLevelDivision> firstLevelDivisions;

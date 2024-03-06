@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.stream.Collectors;
 
@@ -27,12 +26,7 @@ public class ApptMainController {
     private ObservableList<Appointment> allAppointments;  // List of appointments in the table
 
     // FXML elements
-    public Label apptFormLabel;
-    public Label filterViewLabel;
     public ToggleGroup appointmentView;
-    public RadioButton viewMonthlyRadio;
-    public RadioButton viewWeeklyRadio;
-    public RadioButton viewAllRadio;
     public TableView<Appointment> apptTableView;
     public TableColumn<Appointment, Integer> apptIDColumn;
     public TableColumn<Appointment, String> titleColumn;
@@ -45,10 +39,6 @@ public class ApptMainController {
     public TableColumn<Appointment, Integer> customerIDColumn;
     public TableColumn<Appointment, Integer> userColumn;
     public Button viewAlertButton;
-    public Button openCustomerButton;
-    public Button addApptButton;
-    public Button modApptButton;
-    public Button delApptButton;
     public Button logoutButton;
 
     /**
@@ -146,36 +136,32 @@ public class ApptMainController {
     /**
      * Handles action on the "View All" radio button to display all appointments.
      *
-     * @param actionEvent The event that triggered the method.
      */
-    public void viewAllRadioHandler(ActionEvent actionEvent) {
+    public void viewAllRadioHandler() {
         apptTableView.setItems(allAppointments);
     }
 
     /**
      * Handles action on the "View Monthly" radio button to filter and display appointments for the current month.
      *
-     * @param actionEvent The event that triggered the method.
      */
-    public void viewMonthlyRadioHandler(ActionEvent actionEvent) {
+    public void viewMonthlyRadioHandler() {
         filterAppointmentByMonth();
     }
 
     /**
      * Handles action on the "View Weekly" radio button to filter and display appointments for the current week.
      *
-     * @param actionEvent The event that triggered the method.
      */
-    public void viewWeeklyRadioHandler(ActionEvent actionEvent) {
+    public void viewWeeklyRadioHandler() {
         filterAppointmentsByWeek();
     }
 
     /**
      * Displays existing alerts to the user, such as upcoming appointments.
      *
-     * @param actionEvent The event that triggered the method.
      */
-    public void viewAlertButtonHandler(ActionEvent actionEvent) {
+    public void viewAlertButtonHandler() {
         showUpcomingAppointmentAlert();
     }
 
@@ -225,9 +211,8 @@ public class ApptMainController {
      * Handles action on the "Delete Appointment" button. Deletes the selected appointment from the database after
      * confirming the action with the user. The user must select an appointment from the table view before deletion.
      *
-     * @param actionEvent The event that triggered the method.
      */
-    public void delApptButtonHandler(ActionEvent actionEvent) {
+    public void delApptButtonHandler() {
         Appointment selectedAppointment = apptTableView.getSelectionModel().getSelectedItem();
         if (selectedAppointment != null) {
             int deleteIndex = selectedAppointment.getAppointmentID();

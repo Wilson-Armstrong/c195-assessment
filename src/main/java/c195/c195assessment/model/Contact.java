@@ -70,15 +70,6 @@ public class Contact {
     }
 
     /**
-     * Retrieves the contact's email address.
-     *
-     * @return The email address of this contact.
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
      * Sets the contact's email address.
      *
      * @param email The email address to be set for this contact.

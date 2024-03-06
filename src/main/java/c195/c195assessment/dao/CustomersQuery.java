@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Provides functionality for performing CRUD operations on the {@code customers} table in the database.

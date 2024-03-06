@@ -11,8 +11,8 @@ import java.util.TimeZone;
  */
 public class AppContext {
     private static final AppContext INSTANCE = new AppContext();
-    private Locale userLocale;
-    private TimeZone userTimeZone;
+    private final Locale userLocale;
+    private final TimeZone userTimeZone;
     private User user;
 
 

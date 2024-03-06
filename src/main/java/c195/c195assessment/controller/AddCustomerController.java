@@ -11,7 +11,6 @@ import c195.c195assessment.model.FirstLevelDivision;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.util.Comparator;
@@ -20,8 +19,6 @@ import java.util.Comparator;
  * Controller for the Add Customer view, providing functionality to input and submit new customer records.
  */
 public class AddCustomerController {
-    public Label customerMenuLabel;
-    public TextField customerIDField;
     public TextField customerNameField;
     public TextField addressField;
     public TextField postalCodeField;

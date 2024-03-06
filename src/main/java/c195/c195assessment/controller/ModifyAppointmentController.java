@@ -17,6 +17,9 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Controller for the Modify Appointment view, enabling users to update existing appointments.
+ */
 public class ModifyAppointmentController {
     private Appointment selectedAppointment;
 
@@ -48,13 +51,20 @@ public class ModifyAppointmentController {
     public Button cancelButton;
     public Label apptIDValue;
 
+    /**
+     * Initializes the controller. This method is called after the FXML file has been loaded. It sets up the form fields
+     * with existing appointment data and populates the choice boxes.
+     */
     @FXML
     public void initialize() {
-        FormHelper.populateTimeComboBoxes(startTimeComboBox, 0, 23);
-        FormHelper.populateTimeComboBoxes(endTimeComboBox, 0, 23);
+        FormHelper.populateTimeComboBoxes(startTimeComboBox,  15);
+        FormHelper.populateTimeComboBoxes(endTimeComboBox,  15);
     }
 
-    /** Populates the form's fields with the information from the selected appointment. */
+    /**
+     * Populates the form's fields with the information from the selected appointment. This includes setting values for
+     * the appointment's title, description, location, type, start and end times, contact, and customer.
+     */
     public void setupFormWithAppointment() {
         // Setting the values of the form to represent those of the selected appointment
         apptIDValue.setText(String.valueOf(getSelectedAppointment().getAppointmentID()));
@@ -64,16 +74,14 @@ public class ModifyAppointmentController {
         typeField.setText(getSelectedAppointment().getType());
 
         // Start Date and Time fields
-        LocalDateTime convertedStartTime = TimeZoneConversion.convertTimeZone(getSelectedAppointment().getStart(),
-                ZoneId.of("UTC"), AppContext.getUserTimeZone().toZoneId());
+        LocalDateTime convertedStartTime = TimeZoneConversion.utcToLocal(getSelectedAppointment().getStart());
         LocalDate startDate = convertedStartTime.toLocalDate();
         startDatePicker.setValue(startDate);
         String formattedStartTime = convertedStartTime.format(DateTimeFormatter.ofPattern("HH:mm"));
         startTimeComboBox.getSelectionModel().select(formattedStartTime);
 
         // End Date and Time fields
-        LocalDateTime convertedEndTime = TimeZoneConversion.convertTimeZone(getSelectedAppointment().getEnd(),
-                ZoneId.of("UTC"), AppContext.getUserTimeZone().toZoneId());
+        LocalDateTime convertedEndTime = TimeZoneConversion.utcToLocal(getSelectedAppointment().getEnd());
         LocalDate endDate = convertedEndTime.toLocalDate();
         endDatePicker.setValue(endDate);
         String formattedEndTime = convertedEndTime.format(DateTimeFormatter.ofPattern("HH:mm"));
@@ -97,14 +105,22 @@ public class ModifyAppointmentController {
         userIDValueField.setText(String.valueOf(getSelectedAppointment().getUserID()));
     }
 
-    /** Return to the appointment table view without making changes to the selected appointment. */
+    /**
+     * Handles the action of clicking the Cancel button. Returns the user to the main appointment view without applying
+     * any changes to the selected appointment.
+     *
+     * @param actionEvent The event that triggered this method.
+     */
     public void cancelButtonHandler(ActionEvent actionEvent) {
         SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/appointmentMain.fxml");
     }
 
     /**
-     * Ensures that any changes are valid. If so, the selected appointment is updated and the scene returns to the
-     * appointment table view. If not, the user is shown an alert specifying the error.
+     * Validates the modified appointment data and, if valid, updates the appointment in the database. After
+     * successfully updating the appointment, it switches the scene back to the main appointment view. Displays alerts
+     * for any validation failures.
+     *
+     * @param actionEvent The event that triggered this method.
      */
     public void confirmButtonHandler(ActionEvent actionEvent) {
         // Ensure each element has an input
@@ -128,12 +144,10 @@ public class ModifyAppointmentController {
         tempAppointment.setLocation(locationField.getText());
         tempAppointment.setType(typeField.getText());
         LocalDateTime selectedStartTime = FormHelper.getDateTimeFromForm(startDatePicker, startTimeComboBox);
-        LocalDateTime convertedStartTime = TimeZoneConversion.convertTimeZone(selectedStartTime,
-                AppContext.getUserTimeZone().toZoneId(), ZoneId.of("UTC"));
+        LocalDateTime convertedStartTime = TimeZoneConversion.localToUtc(selectedStartTime);
         tempAppointment.setStart(convertedStartTime);
         LocalDateTime selectedEndTime = FormHelper.getDateTimeFromForm(endDatePicker, endTimeComboBox);
-        LocalDateTime convertedEndTime = TimeZoneConversion.convertTimeZone(selectedEndTime,
-                AppContext.getUserTimeZone().toZoneId(), ZoneId.of("UTC"));
+        LocalDateTime convertedEndTime = TimeZoneConversion.localToUtc(selectedEndTime);
         tempAppointment.setEnd(convertedEndTime);
         tempAppointment.setContactID(contactChoiceBox.getSelectionModel().getSelectedItem().getContactId());
         tempAppointment.setCustomerID(customerChoiceBox.getSelectionModel().getSelectedItem().getCustomerID());
@@ -158,8 +172,12 @@ public class ModifyAppointmentController {
         SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/appointmentMain.fxml");
     }
 
-    /** Creates a new Appointment object that copies attributes from the selectedAppointment and takes values from the
-     * editable fields in modifyAppointment.fxml. */
+    /**
+     * Creates a temporary Appointment object based on the form's fields to facilitate validation and database update
+     * operations. This method ensures that modifications are coherent before being committed to the database.
+     *
+     * @return A new Appointment object with updated values from the form.
+     */
     private Appointment getTempAppointment() {
         LocalDate startDate = startDatePicker.getValue();
         LocalTime startTime = LocalTime.parse(startTimeComboBox.getValue(), DateTimeFormatter.ofPattern("HH:mm"));
@@ -179,10 +197,23 @@ public class ModifyAppointmentController {
         return tempAppointment;
     }
 
+    /**
+     * Gets the currently selected appointment being modified. This appointment is loaded into the form fields for
+     * editing by the user.
+     *
+     * @return The {@link Appointment} object currently selected for modification.
+     */
     public Appointment getSelectedAppointment() {
         return selectedAppointment;
     }
 
+    /**
+     * Sets the currently selected appointment to be modified. This method updates the controller's reference to the
+     * selected appointment, which is used to pre-populate the form fields and to identify which appointment record is
+     * being updated in the database.
+     *
+     * @param selectedAppointment The {@link Appointment} object selected by the user for modification.
+     */
     public void setSelectedAppointment(Appointment selectedAppointment) {
         this.selectedAppointment = selectedAppointment;
     }

@@ -4,15 +4,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 /**
- * Represents a first level division record in the 'first-level-divisions' table.
- * <p>
- *     This class is a POJO where an object corresponds to a record in the 'first-level-divisions' table. Its attributes
- *     represent the columns 'Division_ID', 'Division', 'Create_Date', 'Created_By', 'Last_Update', 'Last_Updated_By',
- *     and 'Country_ID'.
- * </p>
- *
- * @author Wilson Armstrong
- * @version 1.0
+ * Represents a first-level division, such as a state or province, as defined in the 'first_level_divisions' database
+ * table.
+ * This class encapsulates the details of a first-level division including its ID, name, creation date, creator,
+ * last update timestamp, latest updater, and associated country ID.
  */
 public class FirstLevelDivision {
     private int divisionID; // INT(10), Primary Key
@@ -24,99 +19,8 @@ public class FirstLevelDivision {
     private int countryID; // INT(10), Foreign Key (Country)
 
     /**
-     * Retrieves the first level division's ID.
-     * <p>
-     *     This method returns the ID of the first level division as stored in the 'Division_ID' field.
-     * </p>
-     *
-     * @return The ID of the first level division.
+     * Constructs an empty {@code FirstLevelDivision} object with default values for all fields.
      */
-    public int getDivisionID() {
-        return divisionID;
-    }
-
-    public void setDivisionID(int divisionID) {
-        this.divisionID = divisionID;
-    }
-
-    /**
-     * Retrieves the first level division's name.
-     * <p>
-     *     This method returns the name of the first level division as stored in the 'Division' field.
-     * </p>
-     *
-     * @return The name of the first level division.
-     */
-    public String getDivision() {
-        return division;
-    }
-
-    public void setDivision(String division) {
-        this.division = division;
-    }
-
-    /**
-     * Retrieves the creation date of the first level division's record.
-     * <p>
-     *     This method returns the creation date of the first level division as stored in the 'Create_Date' field.
-     * </p>
-     *
-     * @return The creation date of the first level division's record.
-     */
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    /**
-     * Retrieves the name of the creator of the first level division's creator.
-     * <p>
-     *     This method returns the creation date of the first level division as stored in the 'Create_Date' field.
-     * </p>
-     *
-     * @return The creation date of the first level division's record.
-     */
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(Instant lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public String getLastUpdatedBy() {
-        return lastUpdatedBy;
-    }
-
-    public void setLastUpdatedBy(String lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
-    }
-
-    public int getCountryID() {
-        return countryID;
-    }
-
-    public void setCountryID(int countryID) {
-        this.countryID = countryID;
-    }
-
-    /**
-     * Constructor for an empty FirstLevelDivision object.
-     *      * <p>
-     *      *     This constructor creates a FirstLevelDivision object with all attributes set to default values.
-     *      * </p>
-     * */
     public FirstLevelDivision() {
         this.setDivisionID(0);
         this.setDivision("");
@@ -128,21 +32,158 @@ public class FirstLevelDivision {
     }
 
     /**
-     * Constructor for a FirstLevelDivision object with specified attribute values.
-     *      * <p>
-     *      *     This constructor creates a FirstLevelDivision object with each attribute being set to a specified value.
-     *      * </p>
-     * */
+     * Constructs a {@code FirstLevelDivision} object with specified values for each attribute,
+     * facilitating the creation of a detailed first-level division record.
+     *
+     * @param divisionID The unique identifier of the first-level division.
+     * @param division The name of the first-level division.
+     * @param createDate The date and time when the division record was created.
+     * @param createdBy The username of the user who created the division record.
+     * @param lastUpdate The timestamp of the last update to the division record.
+     * @param lastUpdatedBy The username of the user who last updated the division record.
+     * @param countryID The identifier of the country to which the division belongs.
+     */
     public FirstLevelDivision(int divisionID, String division, LocalDateTime createDate, String createdBy,
-                              Instant lastUpdate, String lastUpdatedBy, int countryId) {
+                              Instant lastUpdate, String lastUpdatedBy, int countryID) {
         this.setDivisionID(divisionID);
         this.setDivision(division);
         this.setCreateDate(createDate);
         this.setCreatedBy(createdBy);
         this.setLastUpdate(lastUpdate);
         this.setLastUpdatedBy(lastUpdatedBy);
-        this.setCountryID(countryId);
+        this.setCountryID(countryID);
     }
 
+    /**
+     * Retrieves the division ID.
+     *
+     * @return The unique identifier for this first-level division.
+     */
+    public int getDivisionID() {
+        return divisionID;
+    }
+
+    /**
+     * Sets the division ID.
+     *
+     * @param divisionID The unique identifier to set for this first-level division.
+     */
+    public void setDivisionID(int divisionID) {
+        this.divisionID = divisionID;
+    }
+
+    /**
+     * Retrieves the name of the first-level division.
+     *
+     * @return The name of the division.
+     */
+    public String getDivision() {
+        return division;
+    }
+
+    /**
+     * Sets the name of the first-level division.
+     *
+     * @param division The name to set for the division.
+     */
+    public void setDivision(String division) {
+        this.division = division;
+    }
+
+    /**
+     * Retrieves the creation date and time of the division's record.
+     *
+     * @return The LocalDateTime representing when the division was created.
+     */
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    /**
+     * Sets the creation date and time of the division's record.
+     *
+     * @param createDate The LocalDateTime to set as the creation date and time.
+     */
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    /**
+     * Retrieves the username of the user who created the division's record.
+     *
+     * @return The name of the user who created the record.
+     */
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    /**
+     * Sets the username of the user who created the division's record.
+     *
+     * @param createdBy The username to set as the creator of the record.
+     */
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    /**
+     * Retrieves the timestamp of the last update to the division's record.
+     *
+     * @return The Instant representing the last update time.
+     */
+    public Instant getLastUpdate() {
+        return lastUpdate;
+    }
+
+    /**
+     * Sets the timestamp of the last update to the division's record.
+     *
+     * @param lastUpdate The Instant to set as the last update time.
+     */
+    public void setLastUpdate(Instant lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    /**
+     * Retrieves the username of the user who last updated the division's record.
+     *
+     * @return The name of the user who last updated the record.
+     */
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    /**
+     * Sets the username of the user who last updated the division's record.
+     *
+     * @param lastUpdatedBy The username to set as the last updater of the record.
+     */
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    /**
+     * Retrieves the country ID associated with the first-level division.
+     *
+     * @return The ID of the country to which the division belongs.
+     */
+    public int getCountryID() {
+        return countryID;
+    }
+
+    /**
+     * Sets the country ID to associate with the first-level division.
+     *
+     * @param countryID The country ID to associate with the division.
+     */
+    public void setCountryID(int countryID) {
+        this.countryID = countryID;
+    }
+
+    /**
+     * Returns the division's name as a string representation of the {@code FirstLevelDivision} object.
+     *
+     * @return The name of the first-level division.
+     */
     public String toString() { return this.getDivision(); }
 }

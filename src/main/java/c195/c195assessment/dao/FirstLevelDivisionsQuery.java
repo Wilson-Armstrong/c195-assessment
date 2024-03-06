@@ -8,9 +8,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/** This class handles the queries for the first_level_divisions table. */
+/**
+ * Provides functionality for querying the {@code first_level_divisions} table in the database.
+ * This includes retrieving all first-level division records, a specific record by ID, or records filtered by country ID.
+ */
 public abstract class FirstLevelDivisionsQuery {
-    /** Read all entries from the table. */
+
+    /**
+     * Retrieves all first-level division records from the database and returns them as an observable list.
+     *
+     * @return An {@link ObservableList} of {@link FirstLevelDivision} objects, each representing a record from the
+     * first_level_divisions table.
+     */
     public static ObservableList<FirstLevelDivision> readAll() {
         ObservableList<FirstLevelDivision> firstLevelDivisions = FXCollections.observableArrayList();
         String sql = "SELECT * FROM first_level_divisions";
@@ -37,7 +46,13 @@ public abstract class FirstLevelDivisionsQuery {
         return firstLevelDivisions;
     }
 
-    /** Read an entry from the table by its Division_ID. */
+    /**
+     * Retrieves a specific first-level division record by its Division_ID from the database.
+     *
+     * @param divisionID The unique ID of the division to retrieve.
+     * @return A {@link FirstLevelDivision} object representing the retrieved record, or {@code null} if no record with
+     * the specified ID was found.
+     */
     public static FirstLevelDivision readByID(int divisionID) {
         FirstLevelDivision firstLevelDivision = null;
         String sql = "SELECT * FROM first_level_divisions WHERE Division_ID = ?";
@@ -63,7 +78,14 @@ public abstract class FirstLevelDivisionsQuery {
         return firstLevelDivision;
     }
 
-    /** Read all entries from the table that have the specified Country_ID. */
+    /**
+     * Retrieves all first-level division records that belong to a specified country, identified by the Country_ID, from
+     * the database.
+     *
+     * @param countryID The unique ID of the country whose divisions are to be retrieved.
+     * @return An {@link ObservableList} of {@link FirstLevelDivision} objects representing the records that belong to
+     * the specified country.
+     */
     public static ObservableList<FirstLevelDivision> readByCountryID(int countryID) {
         ObservableList<FirstLevelDivision> firstLevelDivisions = FXCollections.observableArrayList();
         String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = ?";

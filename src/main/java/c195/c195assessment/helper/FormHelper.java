@@ -1,46 +1,76 @@
 package c195.c195assessment.helper;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
-/** This class's methods help with various aspects of using the add/modify forms. */
+/**
+ * Contains utility methods for manipulating and retrieving data from form elements within the application.
+ * This includes converting date and time selections into {@link LocalDateTime} objects, populating {@link ComboBox}
+ * with time options, formatting date and time for display in {@link TableColumn}, and validating form inputs.
+ */
 public abstract class FormHelper {
 
-    /** Get the LocalDateTime represented by the Date in a DatePicker and the Time in a ComboBox. */
+    /**
+     * Combines the selected date from a {@link DatePicker} and the selected time from a {@link ComboBox} into a
+     * {@link LocalDateTime} object.
+     *
+     * @param datePicker The {@link DatePicker} from which to retrieve the selected date.
+     * @param timeComboBox The {@link ComboBox} from which to retrieve the selected time as a string.
+     * @return The combined {@link LocalDateTime} representation of the selected date and time.
+     */
     public static LocalDateTime getDateTimeFromForm(DatePicker datePicker, ComboBox<String> timeComboBox) {
         LocalDate selectedDate = datePicker.getValue();
         String selectedTimeStr = timeComboBox.getValue();
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(Constants.TIME_FORMAT);
         LocalTime selectedTime = LocalTime.parse(selectedTimeStr, timeFormatter);
         return LocalDateTime.of(selectedDate, selectedTime);
     }
 
-    /** Fill a ComboBox with the hourly options starting from the startHour and ending with the endHour. */
-    public static void populateTimeComboBoxes(ComboBox<String> comboBox, int startHour, int endHour) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+    /**
+     * Populates a {@link ComboBox} with time options at a specified interval within business hours, converted to the
+     * user's local time zone.
+     *
+     * @param comboBox The {@link ComboBox} to populate.
+     * @param intervalInMinutes The interval, in minutes, at which to generate time options.
+     */
+    public static void populateTimeComboBoxes(ComboBox<String> comboBox, int intervalInMinutes) {
 
-        for (int hour = startHour; hour <= endHour; hour++) {
-            LocalTime time = LocalTime.of(hour, 0);
-            String formattedTime = time.format(formatter);
-            comboBox.getItems().add(formattedTime);
+        // Define the hours of operation
+        ZonedDateTime openTime = ZonedDateTime.of(LocalDate.now(), Constants.OPEN_HOUR, Constants.BUSINESS_TIME_ZONE);
+        ZonedDateTime closeTime = ZonedDateTime.of(LocalDate.now(), Constants.CLOSE_HOUR, Constants.BUSINESS_TIME_ZONE);
+
+        // Convert the hours of operation to the user's time zone
+        ZonedDateTime openTimeUser = openTime.withZoneSameInstant(AppContext.getUserTimeZone().toZoneId());
+        ZonedDateTime closeTimeUser = closeTime.withZoneSameInstant(AppContext.getUserTimeZone().toZoneId());
+
+        // Prepare items for formatted time creation
+        ObservableList<String> formattedTimes = FXCollections.observableArrayList();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.TIME_FORMAT);
+        ZonedDateTime currentTime = openTimeUser;
+
+        while (!currentTime.isAfter(closeTimeUser)) {
+            formattedTimes.add(currentTime.format(formatter));
+            currentTime = currentTime.plusMinutes(intervalInMinutes);
         }
+
+        comboBox.setItems(formattedTimes);
     }
 
-    /** Adds a format of "yyyy-MM-dd HH:mm" to a TableView's LocalDateTime column. */
+    /**
+     * Configures a {@link TableColumn} to display {@link LocalDateTime} values formatted according to a specific
+     * pattern.
+     *
+     * @param column The {@link TableColumn} to configure.
+     * @param <T> The type of the items contained within the table view.
+     */
     public static <T> void setupDateTimeColumn(TableColumn<T, LocalDateTime> column) {
         column.setCellFactory(col -> new TableCell<>() {
-            private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd "
+                    + Constants.TIME_FORMAT);
 
             @Override
             protected void updateItem(LocalDateTime item, boolean empty) {
@@ -49,8 +79,7 @@ public abstract class FormHelper {
                     setText(null);
                 } else {
                     // Convert the database's UTC time to the user's timezone
-                    LocalDateTime localDateTime = TimeZoneConversion.convertTimeZone(item, ZoneId.of("UTC"),
-                            AppContext.getUserTimeZone().toZoneId());
+                    LocalDateTime localDateTime = TimeZoneConversion.utcToLocal(item);
 
                     setText(formatter.format(localDateTime));  // Add the formatting
                 }
@@ -58,31 +87,22 @@ public abstract class FormHelper {
         });
     }
 
-    public void switchFXMLFile(ActionEvent actionEvent, String filepath) {
-        try {
-            // Load next FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(filepath));
-            Parent root = loader.load();
-
-            // Create the new stage and show it
-            Stage loginStage = new Stage();
-            loginStage.setScene(new Scene(root));
-            loginStage.show();
-        } catch (IOException e) {
-            System.out.println("FXML Loading error: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
     /**
-     * Displays an alert instructing a user to remedy an empty input.
+     * Displays an alert instructing a user to remedy an empty input field.
+     *
+     * @param inputName The name of the field that the user has left empty.
      */
     private static void emptyInputAlert(String inputName) {
         Alerts.showAlert("Empty input field", "Please provide a " + inputName + '.');
     }
 
     /**
-     * Ensure that a TextField has a value specified by the user.
+     * Validates whether a {@link TextField} has been left empty and displays an alert if so.
+     *
+     * @param textField The {@link TextField} to check.
+     * @param inputName The name of the input field, used for generating the alert message.
+     * @return {@code true} if the input is empty, {@code false} otherwise.
      */
     public static boolean isInputEmpty(TextField textField, String inputName) {
         if (textField.getText().isEmpty()) {
@@ -93,7 +113,11 @@ public abstract class FormHelper {
     }
 
     /**
-     * Ensure that a DatePicker has a specified date.
+     * Validates whether a {@link DatePicker} has been left without a selected date and displays an alert if so.
+     *
+     * @param datePicker The {@link DatePicker} to check.
+     * @param inputName The name of the input field, used for generating the alert message.
+     * @return {@code true} if no date is selected, {@code false} otherwise.
      */
     public static boolean isInputEmpty(DatePicker datePicker, String inputName) {
         if (datePicker.getValue() == null) {
@@ -104,7 +128,12 @@ public abstract class FormHelper {
     }
 
     /**
-     * Ensure that a ComboBox has a selected option.
+     * Validates whether a {@link ComboBox} has been left without a selected option and displays an alert if so.
+     *
+     * @param comboBox The {@link ComboBox} to check.
+     * @param inputName The name of the input field, used for generating the alert message.
+     * @param <T> The type of the items contained within the combo box.
+     * @return {@code true} if no option is selected, {@code false} otherwise.
      */
     public static <T> boolean isInputEmpty(ComboBox<T> comboBox, String inputName) {
         if (comboBox.getValue() == null) {
@@ -115,7 +144,12 @@ public abstract class FormHelper {
     }
 
     /**
-     * Ensure that a ComboBox has a selected option.
+     * Validates whether a {@link ChoiceBox} has been left without a selected option and displays an alert if so.
+     *
+     * @param choiceBox The {@link ChoiceBox} to check.
+     * @param inputName The name of the input field, used for generating the alert message.
+     * @param <T> The type of the items contained within the choice box.
+     * @return {@code true} if no option is selected, {@code false} otherwise.
      */
     public static <T> boolean isInputEmpty(ChoiceBox<T> choiceBox, String inputName) {
         if (choiceBox.getValue() == null) {

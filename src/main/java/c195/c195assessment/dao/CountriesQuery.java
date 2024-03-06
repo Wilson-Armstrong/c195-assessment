@@ -8,9 +8,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/** This class handles the queries for the countries table. */
+/**
+ * Handles database queries related to the {@code countries} table.
+ * Provides functionality to retrieve all country records or a specific record by its ID.
+ */
 public abstract class CountriesQuery {
-    /** Read all entries from the table. */
+
+    /**
+     * Retrieves all country records from the database and returns them as an observable list.
+     * Each record is converted into a {@link Country} object.
+     *
+     * @return An {@link ObservableList} containing {@link Country} objects for all countries in the database.
+     */
     public static ObservableList<Country> readAll() {
         ObservableList<Country> countries = FXCollections.observableArrayList();
         String sql = "SELECT * FROM countries";
@@ -36,7 +45,12 @@ public abstract class CountriesQuery {
         return countries;
     }
 
-    /** Read an entry from the table by its Country_ID. */
+    /**
+     * Retrieves a specific country record by its ID from the database and returns it as a {@link Country} object.
+     *
+     * @param countryID The unique identifier of the country to retrieve.
+     * @return A {@link Country} object representing the retrieved country, or {@code null} if no country with the specified ID was found.
+     */
     public static Country readByID(int countryID) {
         Country country = null;
         String sql = "SELECT * FROM countries WHERE Country_ID = ?";
@@ -47,7 +61,7 @@ public abstract class CountriesQuery {
 
             if (rs.next()) {
                 country = new Country();
-                country.setCountryId(rs.getInt("Country_ID"));
+                country.setCountryID(rs.getInt("Country_ID"));
                 country.setCountry(rs.getString("Country"));
                 country.setCreateDate(rs.getTimestamp("Create_Date").toLocalDateTime());
                 country.setCreatedBy(rs.getString("Created_By"));

@@ -9,8 +9,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Provides static methods for querying the {@code contacts} table in the database.
+ * This class enables the retrieval of either all contacts or a single contact by its ID.
+ */
 public abstract class ContactsQuery {
-    /** Read all entries from the table. */
+
+    /**
+     * Retrieves all contact records from the {@code contacts} table and returns them as an observable list.
+     *
+     * @return An {@link ObservableList} of {@link Contact} objects representing all contacts in the database.
+     */
     public static ObservableList<Contact> readAll() {
         ObservableList<Contact> contacts = FXCollections.observableArrayList();
         String sql = "SELECT * FROM contacts";
@@ -33,7 +42,12 @@ public abstract class ContactsQuery {
         return contacts;
     }
 
-    /** Read the entry of a single entry by its ID. */
+    /**
+     * Retrieves a single contact record from the database by its ID.
+     *
+     * @param contactID The unique ID of the contact to retrieve.
+     * @return A {@link Contact} object representing the retrieved contact, or {@code null} if no contact with the specified ID was found.
+     */
     public static Contact readByID(int contactID) {
         String sql = "SELECT * FROM contacts WHERE Contact_ID = ?";
 

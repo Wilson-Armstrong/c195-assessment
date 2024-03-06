@@ -15,51 +15,51 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+/**
+ * Controller for the Add Appointment view, enabling users to input and submit new appointments.
+ */
 public class AddAppointmentController {
 
-
-    public Label apptMenuLabel;
-    public Label titleLabel;
     public TextField titleField;
     public TextField descriptionField;
-    public Label descriptionLabel;
-    public Label locationLabel;
     public TextField locationField;
-    public Label typeLabel;
     public TextField typeField;
-    public Label startLabel;
     public DatePicker startDatePicker;
     public ComboBox<String> startTimeComboBox;
-    public Label endLabel;
     public DatePicker endDatePicker;
     public ComboBox<String> endTimeComboBox;
-    public Label contactLabel;
     public ChoiceBox<Contact> contactChoiceBox;
-    public Label customerIDLabel;
     public ComboBox<Customer> customerChoiceBox;
-    public Button confirmButton;
-    public Button cancelButton;
 
+    /**
+     * Initializes the controller class. This method is automatically called after the FXML file has been loaded. It
+     * sets up the form fields, including populating the choice and combo boxes with data from the database.
+     */
     @FXML
     public void initialize() {
         // Populating the options for the ComboBox elements
-        FormHelper.populateTimeComboBoxes(startTimeComboBox, 0, 23);
-        FormHelper.populateTimeComboBoxes(endTimeComboBox, 0, 23);
+        FormHelper.populateTimeComboBoxes(startTimeComboBox,  15);
+        FormHelper.populateTimeComboBoxes(endTimeComboBox, 15 );
         contactChoiceBox.setItems(ContactsQuery.readAll());
         customerChoiceBox.setItems(CustomersQuery.readAll());
     }
 
     /**
-     * Changes the scene back to appointmentMain.fxml.
+     * Handles the action of clicking the Cancel button. This method will switch the scene back to the main appointment
+     * view without saving any input data.
+     *
+     * @param actionEvent The event that triggered this method.
      */
     public void cancelButtonHandler(ActionEvent actionEvent) {
         SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/appointmentMain.fxml");
     }
 
     /**
-     * Ensures that the user has specified valid values for each field of the form, displaying an alert for an invalid
-     * inputs. If all inputs are valid, AppointmentsQuery inserts a new entry using the inputs and the scene switches
-     * back to appointmentMain.fxml.
+     * Validates the form inputs and, if valid, creates a new appointment in the database. After successfully creating
+     * the appointment, it switches the scene back to the main appointment view. Displays alerts for any validation
+     * failures.
+     *
+     * @param actionEvent The event that triggered this method.
      */
     public void confirmButtonHandler(ActionEvent actionEvent) {
         // Ensure each element has an input
@@ -81,8 +81,6 @@ public class AddAppointmentController {
         String type = typeField.getText();
         LocalDateTime start = FormHelper.getDateTimeFromForm(startDatePicker, startTimeComboBox);
         LocalDateTime end = FormHelper.getDateTimeFromForm(endDatePicker, endTimeComboBox);
-        Contact contact = contactChoiceBox.getValue();
-        Customer customer = customerChoiceBox.getValue();
         int contactID = contactChoiceBox.getValue().getContactId();
         int customerID = customerChoiceBox.getValue().getCustomerID();
 
@@ -93,10 +91,8 @@ public class AddAppointmentController {
         }
 
         // Convert times to UTC
-        LocalDateTime utcStart = TimeZoneConversion.convertTimeZone(start, AppContext.getUserTimeZone().toZoneId(),
-                ZoneId.of("UTC"));
-        LocalDateTime utcEnd = TimeZoneConversion.convertTimeZone(end, AppContext.getUserTimeZone().toZoneId(),
-                ZoneId.of("UTC"));
+        LocalDateTime utcStart = TimeZoneConversion.localToUtc(start);
+        LocalDateTime utcEnd = TimeZoneConversion.localToUtc(end);
 
         // Insert entry into database
         User currentUser = AppContext.getUser();

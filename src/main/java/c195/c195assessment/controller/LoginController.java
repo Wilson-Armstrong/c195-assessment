@@ -20,6 +20,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+/**
+ * Controls the login view, handling user authentication and localization of UI elements.
+ */
 public class LoginController {
     public Label formLabel; // Large text at the top of the form
     public Label usernameLabel; // Identifies the username field
@@ -30,6 +33,10 @@ public class LoginController {
     public Label locationValueLabel; // Displays the detected location.
     public Button loginButton;  // Attempts to log in with the details in usernameField and passwordField.
 
+    /**
+     * Initializes the controller class. This method is automatically called after the FXML file has been loaded. It
+     * localizes the login form's UI elements based on the user's locale.
+     */
     @FXML
     public void initialize() {
         ResourceBundle rb1 = ResourceBundle.getBundle("c195.c195assessment.localization.messages", AppContext.getUserLocale());
@@ -42,9 +49,12 @@ public class LoginController {
     }
 
     /**
-     * Check if the entered username and password are found in the database. If not, an alert is displayed to the user.
-     * If so, the scene switches to appointmentMain.
-     * */
+     * Handles the login button click event. Validates the user's login credentials against the database. If the
+     * credentials are valid, the user is logged in and the main application screen is displayed. Otherwise, an error
+     * message is shown.
+     *
+     * @param actionEvent The event that triggered the method.
+     */
     public void loginButtonHandler(ActionEvent actionEvent){
         String username = usernameField.getText();
         String password = passwordField.getText();

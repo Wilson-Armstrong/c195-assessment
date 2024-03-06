@@ -15,9 +15,14 @@ import javafx.stage.Stage;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.stream.Collectors;
 
+/**
+ * Controller for the main appointment view, handling the display and manipulation of appointments, filtering views,
+ * and navigating to appointment-related actions.
+ */
 public class ApptMainController {
     private ObservableList<Appointment> allAppointments;  // List of appointments in the table
 
@@ -46,7 +51,10 @@ public class ApptMainController {
     public Button delApptButton;
     public Button logoutButton;
 
-
+    /**
+     * Initializes the controller. This method sets up the table columns, loads and displays all appointments from the
+     * database, sets up any necessary listeners, and checks for upcoming appointments.
+     */
     @FXML
     public void initialize() {
         // Setting up cellValueFactory and formats
@@ -80,6 +88,9 @@ public class ApptMainController {
         });
     }
 
+    /**
+     * Filters and displays appointments occurring within the current month.
+     */
     private void filterAppointmentByMonth() {
         // Get midnight of the month's first day and just before midnight on the last day
         LocalDateTime startOfMonth = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay();
@@ -92,6 +103,9 @@ public class ApptMainController {
         apptTableView.setItems(filteredAppointments);  // Populate table with filtered items
     }
 
+    /**
+     * Filters and displays appointments occurring within the current week.
+     */
     private void filterAppointmentsByWeek() {
         // Get midnight of the week's first day and just before midnight on the last day
         LocalDateTime startOfWeek = LocalDate.now().with(DayOfWeek.MONDAY).atStartOfDay();
@@ -104,10 +118,16 @@ public class ApptMainController {
         apptTableView.setItems(filteredAppointments);  // Populate table with filtered items
     }
 
+    /**
+     * Checks for any appointments starting within the next 15 minutes and alerts the user if any are found.
+     */
     private void checkForUpcomingAppointments() {
         LocalDateTime now = LocalDateTime.now();
-        boolean upcomingAppointment = allAppointments.stream()
-                .anyMatch((a -> a.getStart().isAfter(now) && a.getStart().isBefore(now.plusMinutes(15))));
+        boolean upcomingAppointment = allAppointments.stream().anyMatch(a -> {
+            LocalDateTime startTime = TimeZoneConversion.utcToLocal(a.getStart());
+            return (startTime.isAfter(now) && startTime.isBefore(now.plusMinutes(15))  // Appointment begins within 15 minutes
+                    && a.getUserID() == AppContext.getUser().getUserId());  // The appointment is with the logged-in user
+        });
 
         if (upcomingAppointment) {
             // Enable "View Active Alert" button and show alert
@@ -116,38 +136,75 @@ public class ApptMainController {
         }
     }
 
+    /**
+     * Displays an alert to the user about an upcoming appointment.
+     */
     private void showUpcomingAppointmentAlert() {
         Alerts.showAlert("Upcoming Appointment", "You have an appointment within the next 15 minutes.");
     }
 
+    /**
+     * Handles action on the "View All" radio button to display all appointments.
+     *
+     * @param actionEvent The event that triggered the method.
+     */
     public void viewAllRadioHandler(ActionEvent actionEvent) {
         apptTableView.setItems(allAppointments);
     }
 
+    /**
+     * Handles action on the "View Monthly" radio button to filter and display appointments for the current month.
+     *
+     * @param actionEvent The event that triggered the method.
+     */
     public void viewMonthlyRadioHandler(ActionEvent actionEvent) {
         filterAppointmentByMonth();
     }
 
+    /**
+     * Handles action on the "View Weekly" radio button to filter and display appointments for the current week.
+     *
+     * @param actionEvent The event that triggered the method.
+     */
     public void viewWeeklyRadioHandler(ActionEvent actionEvent) {
         filterAppointmentsByWeek();
     }
 
-    /** Display existing alerts */
+    /**
+     * Displays existing alerts to the user, such as upcoming appointments.
+     *
+     * @param actionEvent The event that triggered the method.
+     */
     public void viewAlertButtonHandler(ActionEvent actionEvent) {
         showUpcomingAppointmentAlert();
     }
 
-    /** Open the scene that displays the existing customer information. */
+    /**
+     * Handles action on the "Open Customer View" button. Switches the scene to display the customer management view
+     * where users can view, add, modify, and delete customer records.
+     *
+     * @param actionEvent The event that triggered the method.
+     */
     public void openCustomerButtonHandler(ActionEvent actionEvent) {
         SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/customerMain.fxml");
     }
 
-    /** Open the form for creating a new appointment. */
+    /**
+     * Handles action on the "Add Appointment" button. Switches the scene to the form for adding a new appointment to
+     * the schedule.
+     *
+     * @param actionEvent The event that triggered the method.
+     */
     public void addApptButtonHandler(ActionEvent actionEvent) {
         SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/addAppointment.fxml");
     }
 
-    /** Open the form for modifying an existing appointment that is selected from the TableView. */
+    /**
+     * Handles action on the "Modify Appointment" button. Switches the scene to the form for modifying an existing
+     * appointment. The user must select an appointment from the table view before modifying.
+     *
+     * @param actionEvent The event that triggered the method.
+     */
     public void modApptButtonHandler(ActionEvent actionEvent) {
         // Ensure that an appointment from the TableView is selected
         Appointment selectedAppointment = apptTableView.getSelectionModel().getSelectedItem();
@@ -164,7 +221,12 @@ public class ApptMainController {
                 });
     }
 
-    /** Delete the selected appointment from the database. */
+    /**
+     * Handles action on the "Delete Appointment" button. Deletes the selected appointment from the database after
+     * confirming the action with the user. The user must select an appointment from the table view before deletion.
+     *
+     * @param actionEvent The event that triggered the method.
+     */
     public void delApptButtonHandler(ActionEvent actionEvent) {
         Appointment selectedAppointment = apptTableView.getSelectionModel().getSelectedItem();
         if (selectedAppointment != null) {
@@ -178,14 +240,22 @@ public class ApptMainController {
         }
     }
 
-    /** Return to the login screen and log the current user out. */
+    /**
+     * Handles action on the "Logout" button. Logs out the current user, clears any session data, and returns to the
+     * login screen.
+     *
+     * @param actionEvent The event that triggered the method.
+     */
     public void logoutButtonHandler(ActionEvent actionEvent) {
         if (!logoutButton.isDisabled()) { logoutButton.setDisable(false); }  // Disable the alert button between logins
         SceneSwitcher.switchScene(actionEvent, "/c195/c195assessment/fxml/login.fxml");
         AppContext.setUser(null);  // Removing the logged-in user from AppContext
     }
 
-    /** Query the database for an updated list of all appointments and display the updated list in the TableView. */
+    /**
+     * Queries the database for an updated list of all appointments and refreshes the TableView to display the updated
+     * list.
+     */
     private void refreshAppointmentTableView() {
         allAppointments = AppointmentsQuery.readAll();
         apptTableView.setItems(allAppointments);

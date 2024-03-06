@@ -2,6 +2,7 @@ module c195.c195assessment {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires mysql.connector.java;
 
 
     opens c195.c195assessment.controller to javafx.fxml;

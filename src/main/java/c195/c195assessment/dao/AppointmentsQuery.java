@@ -11,14 +11,32 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 
-/** This class handles queries for the appointments table. */
+/**
+ * Provides static methods for performing CRUD operations on the {@code appointments} table in the database.
+ * This class allows for the creation, reading (single and all entries), updating, and deletion of appointment records.
+ */
 public abstract class AppointmentsQuery {
 
-    /** Create a new entry in the Appointments table. Returns the new entry's Appointment_ID. */
+    /**
+     * Inserts a new appointment record into the database and returns the generated appointment ID.
+     *
+     * @param title The title of the appointment.
+     * @param description The description of the appointment.
+     * @param location The location of the appointment.
+     * @param type The type of the appointment.
+     * @param start The start time and date of the appointment.
+     * @param end The end time and date of the appointment.
+     * @param createdBy The username of the user who created the appointment record.
+     * @param lastUpdatedBy The username of the user who last updated the appointment record.
+     * @param customerID The ID of the customer associated with the appointment.
+     * @param userID The ID of the user associated with the appointment.
+     * @param contactID The ID of the contact associated with the appointment.
+     * @return The ID of the newly created appointment, or -1 if the insertion was unsuccessful.
+     */
     public static int insert (String title, String description, String location, String type, LocalDateTime start,
                               LocalDateTime end, String createdBy, String lastUpdatedBy, int customerID, int userID,
                               int contactID) {
-        String sql = "INSERT INTO APPOINTMENTS (Title, Description, Location, Type, Start, End, Create_Date, " +
+        String sql = "INSERT INTO appointments (Title, Description, Location, Type, Start, End, Create_Date, " +
                 "Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) " +
                 "VALUES(?, ?, ?, ?, ?, ?, NOW(), ?, NOW(), ?, ?, ?, ?)";
         int generatedID = -1;  // Will hold the ID value produced by the database for this appointment.
@@ -61,14 +79,24 @@ public abstract class AppointmentsQuery {
         return generatedID;
     }
 
-    /** A wrapper for the other insert statement that will update the POJO's appointmentID after the insert. */
+    /**
+     * Overloaded insert method that accepts an {@link Appointment} object, inserts it into the database,
+     * and updates the object's appointmentID with the generated ID.
+     *
+     * @param newAppointment The {@link Appointment} object to insert into the database.
+     * @return The generated ID of the newly created appointment.
+     */
     public static int insert (Appointment newAppointment) {
         int newApptID = insert(newAppointment.getTitle(), newAppointment.getDescription(), newAppointment.getLocation(), newAppointment.getType(), newAppointment.getStart(), newAppointment.getEnd(), newAppointment.getCreatedBy(), newAppointment.getLastUpdatedBy(), newAppointment.getCustomerID(), newAppointment.getUserID(), newAppointment.getContactID());
         newAppointment.setAppointmentID(newApptID);
         return newApptID;
     }
 
-    /** Read all entries from the table. */
+    /**
+     * Reads all appointment records from the database and returns them as an {@link ObservableList}.
+     *
+     * @return An {@link ObservableList} containing all appointment records retrieved from the database.
+     */
     public static ObservableList<Appointment> readAll() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         String sql = "SELECT * FROM appointments";
@@ -102,7 +130,12 @@ public abstract class AppointmentsQuery {
         return appointments;
     }
 
-    /** Read an entry from the table by its Appointment_ID. */
+    /**
+     * Reads a single appointment record from the database by its appointment ID.
+     *
+     * @param appointmentID The ID of the appointment to retrieve.
+     * @return An {@link Appointment} object representing the retrieved record, or null if not found.
+     */
     public static Appointment readByID(int appointmentID) {
         Appointment appointment = null;
         String sql = "Select * FROM appointments WHERE Appointment_ID = ?";
@@ -133,7 +166,12 @@ public abstract class AppointmentsQuery {
         return appointment;
     }
 
-    /** Attempts to delete an entry from the table appointments by the entry's ID value. */
+    /**
+     * Attempts to delete an appointment record from the database by its appointment ID.
+     *
+     * @param appointmentID The ID of the appointment to delete.
+     * @return {@code true} if the record was successfully deleted, {@code false} otherwise.
+     */
     public static boolean deleteByID(int appointmentID) {
         String sql = "DELETE FROM appointments WHERE Appointment_ID = ?";
 
@@ -148,6 +186,12 @@ public abstract class AppointmentsQuery {
         }
     }
 
+    /**
+     * Updates an existing appointment record in the database with the details contained in the provided {@link Appointment} object.
+     *
+     * @param appointment The {@link Appointment} object containing the updated details.
+     * @return {@code true} if the record was successfully updated, {@code false} otherwise.
+     */
     public static boolean update(Appointment appointment) {
         String sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, "
                 + "Last_Update = NOW(), Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? "
